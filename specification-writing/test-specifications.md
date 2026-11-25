@@ -31,7 +31,7 @@
 | 2.4 共通実行手順 | 準備、操作、観測、終了・後始末 |
 | 2.5 診断記録と再現方法 | 実行前の記録、固定値での再現方法 |
 
-外部・内部で共通する見出しと表現を揃え、異なる観測方法は対象に合わせる。統合型では共通条件を共有し、ケースIDを外部・内部で区別する。
+外部・内部で共通する見出しと表現を揃え、異なる観測方法は対象に合わせる。外部テストと内部テストを一つの文書に記載する場合は共通条件を共有し、ケースIDを外部・内部で区別する。
 
 ## 3. 試験環境と観測
 
@@ -74,4 +74,4 @@
 
 ## 7. 記述例
 
-[外部テスト](examples/external-test-specification.md)・[内部テスト](examples/internal-test-specification.md)・[統合型テスト](examples/combined-test-specification.md)・[対応表](examples/specification-test-mapping.md)
+[外部テスト](examples/external-test-specification.md)・[内部テスト](examples/internal-test-specification.md)・[テスト仕様書](examples/test-specification.md)・[対応表](examples/specification-test-mapping.md)

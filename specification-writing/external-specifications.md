@@ -60,4 +60,4 @@
 
 ## 7. 記述例
 
-[テンプレート](templates/external-specification.md)・[完成例](examples/external-specification.md)・[統合型の例](examples/combined-specification.md)
+[テンプレート](templates/external-specification.md)・[完成例](examples/external-specification.md)・[外部仕様と内部仕様を分けない場合の例](examples/specification.md)

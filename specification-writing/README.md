@@ -20,13 +20,13 @@
 |---|---|---|
 | 外部仕様書 | [ひな形](templates/external-specification.md) | [記述例](examples/external-specification.md) |
 | 内部仕様書 | [ひな形](templates/internal-specification.md) | [記述例](examples/internal-specification.md) |
-| 統合型仕様書 | [ひな形](templates/combined-specification.md) | [記述例](examples/combined-specification.md) |
+| 仕様書 | [ひな形](templates/specification.md) | [記述例](examples/specification.md) |
 | 外部テスト仕様書 | [ひな形](templates/external-test-specification.md) | [記述例](examples/external-test-specification.md) |
 | 内部テスト仕様書 | [ひな形](templates/internal-test-specification.md) | [記述例](examples/internal-test-specification.md) |
-| 統合型テスト仕様書 | [ひな形](templates/combined-test-specification.md) | [記述例](examples/combined-test-specification.md) |
+| テスト仕様書 | [ひな形](templates/test-specification.md) | [記述例](examples/test-specification.md) |
 | 仕様・テスト対応表 | [ひな形](templates/specification-test-mapping.md) | [記述例](examples/specification-test-mapping.md) |
 
-分離型の例と統合型の例は同じ契約を別の構成で表したもの。どちらか一方を正本として採用する。対応表のサンプルには両構成への参照を示す。
+「仕様書」「テスト仕様書」のひな形と記述例は、外部と内部を分けずに一つの文書に記載する場合に使用できる。外部と内部を別文書にする例も同じ契約を扱っている。どちらか一方を正本として採用する。対応表のサンプルには両方の構成への参照を示す。
 
 ## 利用手順
 
