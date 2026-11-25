@@ -16,7 +16,10 @@
 
 #### 2.1.1 試験環境
 
-NoteRegistrationを記録可能なINoteStore代役と共に直接生成する試験、および本番DI構成から要求スコープを作る試験を行う。
+| 試験方式 | 準備 |
+|---|---|
+| 登録処理の直接試験 | `NoteRegistration`を試験用`INoteStore`と共に生成 |
+| DI構成の試験 | 本番DI登録から要求スコープを生成 |
 
 #### 2.1.2 共通設定
 
@@ -28,11 +31,30 @@ NoteRegistrationを記録可能なINoteStore代役と共に直接生成する試
 
 ### 2.2 入力と代役の条件・期待結果
 
-title=`"買い物"`、content=`"牛乳"`。保存代役はNoteと取消トークンを記録し、指定されたboolを返す。取消試験では渡された取消トークンで取消例外を発生させる。
+#### 2.2.1 入力
+
+| 引数 | 値 |
+|---|---|
+| `title` | `"買い物"` |
+| `content` | `"牛乳"` |
+| `cancellationToken` | 通常時は`CancellationToken.None`、取消試験は取消可能なトークン |
+
+#### 2.2.2 保存代役
+
+| 条件 | 動作 |
+|---|---|
+| 通常 | `Note`と取消トークンを記録し、指定されたboolを返す |
+| 取消試験 | 引数を記録して呼出し到達を通知し、受け取ったトークンの取消まで待機する。取消時に`OperationCanceledException`を発生させる |
 
 ### 2.3 観測と判定
 
-呼出し引数、戻り値、呼出し回数、取消例外、構成の解決結果を比較する。IDはUUIDとしての型と同一性を判定する。
+| 観測対象 | 判定方法 |
+|---|---|
+| 保存代役の記録 | 引数と呼出し回数を3章の条件に従って比較 |
+| 登録結果 | `Saved`と`Id`を比較 |
+| 取消 | 呼出し元と代役が受け取ったトークンの同一性、取消例外を確認 |
+| DI | 解決したインスタンスの参照同一性を比較 |
+| 宣言 | 公開コンストラクターの引数型を確認 |
 
 ### 2.4 共通実行手順
 
@@ -44,7 +66,10 @@ title=`"買い物"`、content=`"牛乳"`。保存代役はNoteと取消トーク
 
 #### 2.5.1 実行前の記録
 
-ケースID、入力値、代役の結果・取消条件を記録する。
+| 分類 | 記録する内容 |
+|---|---|
+| 実行前 | ケースID、条件ID、入力値、代役の結果・取消条件 |
+| 失敗時 | 実際の戻り値、保存代役の記録、例外またはDI解決結果 |
 
 #### 2.5.2 再現方法
 
@@ -54,40 +79,42 @@ title=`"買い物"`、content=`"牛乳"`。保存代役はNoteと取消トーク
 
 | ケースID | 確認目的 | 条件数 | 根拠（内部仕様） |
 |---|---|---:|---|
-| [内部-01](#internal-01) | 登録結果と保存引数 | 2 | 4.1〜4.3 |
-| [内部-02](#internal-02) | 取消の伝播 | 1 | 4.2、4.4 |
-| [内部-03](#internal-03) | DIと依存 | 2 | 3.3、5.1〜5.2 |
+| [内部-01](#internal-01) | 登録結果と保存引数 | 2 | [4.1](internal-specification.md#41-一覧)〜[4.3](internal-specification.md#43-結果) |
+| [内部-02](#internal-02) | 取消の伝播 | 1 | [4.2](internal-specification.md#42-入力)、[4.4](internal-specification.md#44-取消タイムアウト例外) |
+| [内部-03](#internal-03) | DIと依存 | 2 | [3.3](internal-specification.md#33-依存方向)、[5.1](internal-specification.md#51-依存解決)〜[5.2](internal-specification.md#52-差替え) |
 
 <a id="internal-01"></a>
 ### 3.1 内部-01 登録結果と保存引数
 
 | 条件ID | 準備・操作 | 期待結果・合否条件 |
 |---|---|---|
-| 内部-01-01 | 代役trueでRegisterAsyncを呼ぶ | 保存1回。Noteのtitle・contentは入力と一致、IdはGuid。Saved=true、結果IdはNote.Idと一致 |
-| 内部-01-02 | 代役falseでRegisterAsyncを呼ぶ | 保存1回。Saved=false、Id=null |
+| 内部-01-01 | 代役trueで`RegisterAsync`を呼ぶ | 保存1回。`Note.Title`・`Note.Content`は入力と一致、`Id`はGuid。`Saved=true`、結果`Id`は`Note.Id`と一致 |
+| 内部-01-02 | 代役falseで`RegisterAsync`を呼ぶ | 保存1回。`Note.Title`・`Note.Content`は入力と一致。`Saved=false`、`Id=null` |
 
 <a id="internal-02"></a>
 ### 3.2 内部-02 取消の伝播
 
 | 条件ID | 準備・操作 | 期待結果・合否条件 |
 |---|---|---|
-| 内部-02-01 | 取消可能なトークンでRegisterAsyncを呼び、代役で呼出し到達を通知した後にトークンを取消 | 代役が受けたトークンは呼出し元のトークンと一致し、取消例外が呼出し元に伝播 |
+| 内部-02-01 | 取消可能なトークンで`RegisterAsync`を呼び、代役で呼出し到達を通知した後にトークンを取消 | 代役が受けたトークンは呼出し元のトークンと一致し、取消例外が呼出し元に伝播 |
 
 <a id="internal-03"></a>
 ### 3.3 内部-03 DIと依存
 
 | 条件ID | 準備・操作 | 期待結果・合否条件 |
 |---|---|---|
-| 内部-03-01 | 本番DI登録から二つの要求スコープを作り、各スコープでNoteRegistrationとINoteStoreを二回解決 | 同じスコープ内は同一インスタンス、異なるスコープ間は別インスタンス |
-| 内部-03-02 | NoteRegistrationの公開コンストラクター宣言を確認 | INoteStoreを引数として取るコンストラクターが存在 |
+| 内部-03-01 | 本番DI登録から二つの要求スコープを作り、各スコープで`NoteRegistration`と`INoteStore`を二回解決 | 各登録対象について、同じスコープ内は同一インスタンス、異なるスコープ間は別インスタンス |
+| 内部-03-02 | `NoteRegistration`の公開コンストラクター宣言を確認 | `INoteStore`を引数として取るコンストラクターが存在 |
 
 ## 4. テストコードの配置・対応
 
 | 対象ケース | 基点からの配置予定 |
 |---|---|
-| 内部-01〜02 | tests/InternalContracts/NoteRegistrationTests.cs |
-| 内部-03 | tests/InternalContracts/CompositionTests.cs |
+| 内部-01〜02 | `tests/InternalContracts/NoteRegistrationTests.cs` |
+| 内部-03 | `tests/InternalContracts/CompositionTests.cs` |
 
 ## 5. 参照資料
 
-[内部仕様書](internal-specification.md)。
+| 資料 | 参照範囲 |
+|---|---|
+| [内部仕様書](internal-specification.md) | 内部契約 v1 |
