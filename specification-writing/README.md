@@ -14,6 +14,15 @@
 - [Markdownの記述方法](markdown-style.md)
 - [作成・レビュー・改訂](workflow-and-review.md)
 
+## 個別の記述例
+
+- [外部仕様の表・文章](writing-examples/external-specifications.md)
+- [内部仕様の表・文章](writing-examples/internal-specifications.md)
+- [テスト仕様の表・文章](writing-examples/test-specifications.md)
+- [図の記述例（Mermaid）](writing-examples/diagrams.md)
+
+各記述例は対象に合う形式を選ぶための資料である。すべての図表や列を一つの仕様書に設けることを求めるものではない。完成例とは独立した例も含む。
+
 ## テンプレートと完成例
 
 | 文書 | テンプレート | サンプル |

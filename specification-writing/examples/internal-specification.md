@@ -34,6 +34,8 @@
 
 ### 3.1 全体構造
 
+#### 3.1.1 構成図
+
 ```mermaid
 flowchart LR
     A[HTTP受付] --> B[NoteRegistration]
@@ -51,11 +53,11 @@ flowchart LR
 
 ### 3.3 依存方向
 
-| 依存元 | 依存先 | 用途 |
-|---|---|---|
-| HTTP受付 | NoteRegistration | 登録 |
-| NoteRegistration | INoteStore | 保存 |
-| 構成処理 | NoteRegistration・保存実装 | 登録・依存解決 |
+| 構成要素 | 利用する境界・実装 |
+|---|---|
+| HTTP受付 | NoteRegistration |
+| NoteRegistration | INoteStore |
+| 構成処理 | NoteRegistration・保存実装 |
 
 
 ## 4. 内部インターフェース
@@ -90,7 +92,16 @@ flowchart LR
 
 ### 5.1 依存解決
 
-起動時に標準DIでNoteRegistrationとINoteStoreの実装をScopedとして登録する。HTTP受付の要求スコープで解決する。
+起動時に標準DIで登録する。
+
+| 登録対象 | 生存期間 |
+|---|---|
+| NoteRegistration | Scoped |
+| INoteStoreの実装 | Scoped |
+
+| 処理 | スコープ | 依存解決と処理範囲 |
+|---|---|---|
+| HTTP受付 | HTTP要求スコープ | 要求スコープで解決する |
 
 ### 5.2 差替え
 
