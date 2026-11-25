@@ -101,8 +101,6 @@ titleまたはcontentの欠落・null・型不一致、titleの空文字、JSON�
 
 ### 5.1 全体フロー
 
-外部仕様上の動作を示す概念図。
-
 ```mermaid
 flowchart TD
     A[要求受信] --> B{入力検証}
